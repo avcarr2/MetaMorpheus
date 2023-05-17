@@ -18,7 +18,7 @@ namespace EngineLayer
         }
 
         public CommonParameters(string taskDescriptor = null, DissociationType dissociationType = DissociationType.HCD, DissociationType ms2childScanDissociationType = DissociationType.Unknown, DissociationType ms3childScanDissociationType = DissociationType.Unknown, string separationType = "HPLC", bool doPrecursorDeconvolution = true,
-            bool useProvidedPrecursorInfo = true, double deconvolutionIntensityRatio = 3, int deconvolutionMaxAssumedChargeState = 12, bool reportAllAmbiguity = true,
+            bool useProvidedPrecursorInfo = true, bool useCseDecon = false, double deconvolutionIntensityRatio = 3, int deconvolutionMaxAssumedChargeState = 12, bool reportAllAmbiguity = true,
             bool addCompIons = false, int totalPartitions = 1, double scoreCutoff = 5, int? numberOfPeaksToKeepPerWindow = 200, double? minimumAllowedIntensityRatioToBasePeak = 0.01, double? windowWidthThomsons = null, int? numberOfWindows = null, bool normalizePeaksAccrossAllWindows = false, bool trimMs1Peaks = false,
             bool trimMsMsPeaks = true, bool useDeltaScore = false, Tolerance productMassTolerance = null, Tolerance precursorMassTolerance = null, Tolerance deconvolutionMassTolerance = null,
             int maxThreadsToUsePerFile = -1, DigestionParams digestionParams = null, IEnumerable<(string, string)> listOfModsVariable = null, IEnumerable<(string, string)> listOfModsFixed = null, double qValueOutputFilter = 1.0, double pepQValueOutputFilter = 1.0,
@@ -30,6 +30,7 @@ namespace EngineLayer
             UseProvidedPrecursorInfo = useProvidedPrecursorInfo;
             DeconvolutionIntensityRatio = deconvolutionIntensityRatio;
             DeconvolutionMaxAssumedChargeState = deconvolutionMaxAssumedChargeState;
+            UseCseDeconvolution = useCseDecon;
             ReportAllAmbiguity = reportAllAmbiguity;
             AddCompIons = addCompIons;
             TotalPartitions = totalPartitions;
@@ -84,6 +85,7 @@ namespace EngineLayer
         public bool DoPrecursorDeconvolution { get; private set; }
         public bool UseProvidedPrecursorInfo { get; private set; }
         public double DeconvolutionIntensityRatio { get; private set; }
+        public bool UseCseDeconvolution { get; private set; }
         public int DeconvolutionMaxAssumedChargeState { get; private set; }
         public Tolerance DeconvolutionMassTolerance { get; private set; }
         public int TotalPartitions { get; set; }
