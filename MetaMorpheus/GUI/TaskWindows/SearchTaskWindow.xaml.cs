@@ -79,6 +79,7 @@ namespace MetaMorpheusGUI
             }
         }
 
+
         private void PopulateChoices()
         {
             foreach (Protease protease in ProteaseDictionary.Dictionary.Values)
@@ -1294,6 +1295,11 @@ namespace MetaMorpheusGUI
         {
             PepQValueTextBox.Clear();
             QValueTextBox.Text = "0.01";
+        }
+
+        private void DeconvolutePrecursors_Checked(object sender, RoutedEventArgs e)
+        {
+	        UseAustinConv.IsEnabled = true; 
         }
 
         /// <summary>

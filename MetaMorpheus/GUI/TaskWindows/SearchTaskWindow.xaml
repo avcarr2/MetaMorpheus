@@ -633,7 +633,7 @@
                                             </StackPanel>
 
                                             <!-- Deconvolute precursors -->
-                                            <StackPanel Orientation="Horizontal" Margin="10,5,5,5">
+                                            <StackPanel Orientation="Vertical" Margin="10,5,5,5">
                                                 <CheckBox x:Name="DeconvolutePrecursors" Content="Deconvolute Precursors" IsChecked="True" ToolTipService.ShowDuration="999999" ToolTipService.InitialShowDelay="500">
                                                     <CheckBox.ToolTip>
                                                         <TextBlock>
@@ -641,6 +641,7 @@
                                                         </TextBlock>
                                                     </CheckBox.ToolTip>
                                                 </CheckBox>
+                                                <CheckBox x:Name="UseAustinConv" Content="Use charge state ladder deconvolution" IsChecked="True" IsEnabled="{Binding IsChecked, ElementName=DeconvolutePrecursors}"></CheckBox>
                                             </StackPanel>
 
                                             <StackPanel Orientation="Horizontal" Margin="5">
