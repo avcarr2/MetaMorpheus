@@ -10,6 +10,7 @@ using Proteomics.ProteolyticDigestion;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -144,16 +145,23 @@ namespace TaskLayer
 
                             if (commonParameters.DoPrecursorDeconvolution)
                             {
-                                foreach (IsotopicEnvelope envelope in ms2scan.GetIsolatedMassesAndCharges(
-                                    precursorSpectrum.MassSpectrum, 1,
-                                    commonParameters.DeconvolutionMaxAssumedChargeState,
-                                    commonParameters.DeconvolutionMassTolerance.Value,
-                                    commonParameters.DeconvolutionIntensityRatio))
-                                {
-                                    double monoPeakMz = envelope.MonoisotopicMass.ToMz(envelope.Charge);
-                                    precursors.Add((monoPeakMz, envelope.Charge));
-                                }
-                            }
+	                            if (commonParameters.UseCseDeconvolution)
+	                            {
+                                    // need to get a new, local build of mzLib.
+	                            }
+	                            else
+	                            {
+		                            foreach (IsotopicEnvelope envelope in ms2scan.GetIsolatedMassesAndCharges(
+			                                     precursorSpectrum.MassSpectrum, 1,
+			                                     commonParameters.DeconvolutionMaxAssumedChargeState,
+			                                     commonParameters.DeconvolutionMassTolerance.Value,
+			                                     commonParameters.DeconvolutionIntensityRatio))
+		                            {
+			                            double monoPeakMz = envelope.MonoisotopicMass.ToMz(envelope.Charge);
+			                            precursors.Add((monoPeakMz, envelope.Charge));
+		                            }
+								}
+	                        }
                         }
 
                         if (commonParameters.UseProvidedPrecursorInfo && ms2scan.SelectedIonChargeStateGuess.HasValue)
