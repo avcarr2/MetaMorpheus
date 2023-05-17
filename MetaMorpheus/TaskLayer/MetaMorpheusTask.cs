@@ -116,6 +116,15 @@ namespace TaskLayer
                 (partitionRange, loopState) =>
                 {
                     List<(double, int)> precursors = new List<(double, int)>();
+                    Deconvoluter deconAlgo = null; 
+                    if (commonParameters.UseCseDeconvolution)
+                    {
+						deconAlgo = new Deconvoluter(DeconvolutionType.AustinConv,
+		                    new ChargeStateDeconvolutionParams(3,
+			                    commonParameters.DeconvolutionMaxAssumedChargeState,
+			                    commonParameters.DeconvolutionMassTolerance.Value));
+
+                    }
 
                     for (int i = partitionRange.Item1; i < partitionRange.Item2; i++)
                     {
@@ -145,13 +154,28 @@ namespace TaskLayer
 
                             if (commonParameters.DoPrecursorDeconvolution)
                             {
-	                            if (commonParameters.UseCseDeconvolution)
+	                            MzRange? deconvolutionRange = null; 
+	                            if (ms2scan.SelectedIonMZ == null)
 	                            {
-                                    // need to get a new, local build of mzLib.
+		                            deconvolutionRange = precursorSpectrum.ScanWindowRange; 
 	                            }
 	                            else
 	                            {
-		                            foreach (IsotopicEnvelope envelope in ms2scan.GetIsolatedMassesAndCharges(
+                                    deconvolutionRange = ms2scan.IsolationRange;
+	                            }
+                                
+	                            if (commonParameters.UseCseDeconvolution)
+	                            { 
+		                            IEnumerable<IsotopicEnvelope> envelopeResults = deconAlgo.Deconvolute(precursorSpectrum, deconvolutionRange);
+		                            foreach (var envelope in envelopeResults)
+		                            {
+			                            double monoPeakMz = envelope.MonoisotopicMass.ToMz(envelope.Charge); 
+                                        precursors.Add((monoPeakMz, envelope.Charge));
+		                            }
+	                            }
+	                            else
+	                            {
+		                            foreach (IsotopicEnvelope envelope in precursorSpectrum.GetIsolatedMassesAndCharges(
 			                                     precursorSpectrum.MassSpectrum, 1,
 			                                     commonParameters.DeconvolutionMaxAssumedChargeState,
 			                                     commonParameters.DeconvolutionMassTolerance.Value,
