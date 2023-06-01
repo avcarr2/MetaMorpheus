@@ -116,17 +116,17 @@ namespace TaskLayer
                 (partitionRange, loopState) =>
                 {
                     List<(double, int)> precursors = new List<(double, int)>();
-                    Deconvoluter deconAlgo = null; 
-                    if (commonParameters.UseCseDeconvolution)
-                    {
-						deconAlgo = new Deconvoluter(DeconvolutionType.AustinConv,
-		                    new ChargeStateDeconvolutionParams(3,
-			                    commonParameters.DeconvolutionMaxAssumedChargeState, 10, envelopeThreshold:0.6));
-
-                    }
-
+                    
+                    Deconvoluter deconAlgo = null;
                     for (int i = partitionRange.Item1; i < partitionRange.Item2; i++)
                     {
+                        if (commonParameters.UseCseDeconvolution)
+                        {
+                            deconAlgo = new Deconvoluter(DeconvolutionType.AustinConv,
+                                new ChargeStateDeconvolutionParams(3,
+                                    commonParameters.DeconvolutionMaxAssumedChargeState, 10, envelopeThreshold: 0.6));
+
+                        }
                         if (GlobalVariables.StopLoops) { break; }
 
                         precursors.Clear();
@@ -165,9 +165,12 @@ namespace TaskLayer
                                 
 	                            if (commonParameters.UseCseDeconvolution)
 	                            { 
-		                            IEnumerable<IsotopicEnvelope> envelopeResults = deconAlgo.Deconvolute(precursorSpectrum, deconvolutionRange)
-                                        .OrderByDescending(env => env.Score);
-                                    foreach (var envelope in envelopeResults.Take(15))
+		                            IEnumerable<IsotopicEnvelope> envelopeResults = deconAlgo
+                                        .Deconvolute(precursorSpectrum, deconvolutionRange)
+                                        .OrderByDescending(env => env.Score)
+                                        .Take(15)
+                                        .ToList();
+                                    foreach (var envelope in envelopeResults)
 		                            {
 			                            double monoPeakMz = envelope.MonoisotopicMass.ToMz(envelope.Charge); 
                                         precursors.Add((monoPeakMz, envelope.Charge));
