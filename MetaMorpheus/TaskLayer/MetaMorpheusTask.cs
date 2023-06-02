@@ -111,22 +111,24 @@ namespace TaskLayer
             {
                 return scansWithPrecursors;
             }
+            Deconvoluter deconAlgo = null;
+            if (commonParameters.UseCseDeconvolution)
+            {
+                deconAlgo = new Deconvoluter(DeconvolutionType.AustinConv,
+                    new ChargeStateDeconvolutionParams(3,
+                        commonParameters.DeconvolutionMaxAssumedChargeState, 10, envelopeThreshold: 0.6));
+
+            }
 
             Parallel.ForEach(Partitioner.Create(0, ms2Scans.Length), new ParallelOptions { MaxDegreeOfParallelism = commonParameters.MaxThreadsToUsePerFile },
                 (partitionRange, loopState) =>
                 {
                     List<(double, int)> precursors = new List<(double, int)>();
                     
-                    Deconvoluter deconAlgo = null;
+                    
                     for (int i = partitionRange.Item1; i < partitionRange.Item2; i++)
                     {
-                        if (commonParameters.UseCseDeconvolution)
-                        {
-                            deconAlgo = new Deconvoluter(DeconvolutionType.AustinConv,
-                                new ChargeStateDeconvolutionParams(3,
-                                    commonParameters.DeconvolutionMaxAssumedChargeState, 10, envelopeThreshold: 0.6));
 
-                        }
                         if (GlobalVariables.StopLoops) { break; }
 
                         precursors.Clear();
