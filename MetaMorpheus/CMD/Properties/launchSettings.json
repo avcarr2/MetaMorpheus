@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "CMD": {
-      "commandName": "Project",
-      "commandLineArgs": "-t \""
-    }
-  }
-}
